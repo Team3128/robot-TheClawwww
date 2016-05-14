@@ -6,10 +6,8 @@ import org.team3128.common.hardware.lights.LightsColor;
 import org.team3128.common.hardware.lights.LightsSequence;
 import org.team3128.common.hardware.lights.PWMLights;
 import org.team3128.common.hardware.motor.MotorGroup;
-import org.team3128.common.listener.IListenerCallback;
 import org.team3128.common.listener.ListenerManager;
-import org.team3128.common.listener.controller.ControllerExtreme3D;
-import org.team3128.common.listener.controller.ControllerXbox;
+import org.team3128.common.listener.controllers.ControllerXbox;
 import org.team3128.common.multibot.MainClass;
 import org.team3128.common.multibot.RobotTemplate;
 import org.team3128.common.util.GenericSendableChooser;
@@ -30,7 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class MainDriveCold extends MainClass
 {
 	
-	public ListenerManager listenerManagerExtreme;
+	public ListenerManager lmXbox;
 	
 	public MotorGroup _pidTestMotor;
 	
@@ -42,13 +40,6 @@ public class MainDriveCold extends MainClass
 	
 	public TankDrive drive;
 	
-	IListenerCallback updateDriveArcade;
-	IListenerCallback updateDriveCOD;
-	
-	boolean codDriveEnabled = false;
-	boolean shoulderInverted = true;
-	boolean elbowInverted = true;
-	
 	int cameraHandle;
 	PWMLights lights;
 	
@@ -57,7 +48,7 @@ public class MainDriveCold extends MainClass
 	
 	public MainDriveCold()
 	{	
-		listenerManagerExtreme = new ListenerManager(new Joystick(0));
+		lmXbox = new ListenerManager(new Joystick(0));
 		powerDistPanel = new PowerDistributionPanel();
 		
 		leftDriveEncoder = new QuadratureEncoderLink(0,	1, 128, false);
@@ -75,14 +66,7 @@ public class MainDriveCold extends MainClass
 	
 		drive = new TankDrive(leftMotors, rightMotors, leftDriveEncoder, rightDriveEncoder, 6 * Length.in * Math.PI, 1, 24.5 * Length.in);
 		
-		updateDriveCOD = () ->
-		{
-			double joyX = listenerManagerExtreme.getRawAxis(ControllerExtreme3D.TWIST);
-			double joyY = listenerManagerExtreme.getRawAxis(ControllerExtreme3D.JOYY);
-			double throttle = -listenerManagerExtreme.getRawAxis(ControllerExtreme3D.THROTTLE);
-			
-			drive.arcadeDrive(joyX, joyY, throttle, listenerManagerExtreme.getRawBool(ControllerExtreme3D.TRIGGERDOWN));
-		};
+
 				
 		lights = new PWMLights(10, 11, 12);
 		
@@ -96,11 +80,46 @@ public class MainDriveCold extends MainClass
 		lightShowSequence.addStep(new LightsSequence.Step(LightsColor.new8Bit(0xff, 1, 0xff), 500, false));
 		
 		lightShowSequence.setRepeat(true);
+		
+		LightsSequence ccaColorsSequence = new LightsSequence();
+		ccaColorsSequence.addStep(new LightsSequence.Step(LightsColor.white, 1000, false));
+		ccaColorsSequence.addStep(new LightsSequence.Step(LightsColor.red, 1000, false));
+		ccaColorsSequence.setRepeat(true);
+		
+		lights.executeSequence(ccaColorsSequence);
+
+
+		//Teleop listeners
+		//--------------------------------------------------------------------------------------------
+
+        //NIVision.IMAQdxStartAcquisition(cameraHandle);
+		
+		//-----------------------------------------------------------
+		// Drive code, on Logitech Extreme3D joystick
+		//-----------------------------------------------------------
+		lmXbox.nameControl(ControllerXbox.START, "ClearStickyFaults");
+		lmXbox.nameControl(ControllerXbox.RB, "DriveDoubleSpeed");
+		
+		lmXbox.nameControl(ControllerXbox.JOY2X, "DriveTurn");
+		lmXbox.nameControl(ControllerXbox.JOY1Y, "DriveForwardBackward");
+		
+		lmXbox.addButtonDownListener("ClearStickyFaults", () ->
+		{
+			powerDistPanel.clearStickyFaults();
+		});
+		
+		
+		lmXbox.addMultiListener(() ->
+		{
+			double joyX = .75 * lmXbox.getAxis("DriveTurn");
+			double joyY = lmXbox.getAxis("DriveForwardBackward");			
+			drive.arcadeDrive(joyX, joyY, 1, lmXbox.getButton("DriveDoubleSpeed"));
+		}, "DriveTurn", "DriveForwardBackward", "DriveDoubleSpeed");
 	}
 
 	protected void initializeRobot(RobotTemplate robotTemplate)
 	{	
-		robotTemplate.addListenerManager(listenerManagerExtreme);
+		robotTemplate.addListenerManager(lmXbox);
 		
         Log.info("MainDriveCold", "\"Coldbot\"   Activated");
 	}
@@ -115,23 +134,6 @@ public class MainDriveCold extends MainClass
 	
 	protected void initializeTeleop()
 	{	
-		
-		lights.executeSequence(lightShowSequence);
-
-		//lights.setFader(Color.new11Bit(2000, 2000, 2000), 1, 10);
-        //NIVision.IMAQdxStartAcquisition(cameraHandle);
-		
-		//-----------------------------------------------------------
-		// Drive code, on Logitech Extreme3D joystick
-		//-----------------------------------------------------------
-		listenerManagerExtreme.addListener(updateDriveCOD,
-				ControllerExtreme3D.TWIST, ControllerExtreme3D.JOYY, ControllerExtreme3D.THROTTLE,
-				ControllerExtreme3D.TRIGGERDOWN, ControllerExtreme3D.TRIGGERUP);
-		
-		listenerManagerExtreme.addListener(ControllerXbox.STARTDOWN, () ->
-		{
-			powerDistPanel.clearStickyFaults();
-		});
 	}
 
 	@Override

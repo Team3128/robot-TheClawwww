@@ -1,7 +1,5 @@
 package org.team3128.util;
 
-import org.team3128.common.util.RobotMath;
-
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.GetImageSizeResult;
 
@@ -117,9 +115,8 @@ public class ParticleReport implements Comparable<ParticleReport>{
 	
 	
 	//these numbers are constant, so to get better performance we calculate them beforehand
-	final static private double HALF_VIEW_ANGLE = RobotMath.dTR(VIEW_ANGLE) / 2.0; //in radians
 
-	final static private double TANGENT_OF_HALF_VIEW_ANGLE = Math.tan(HALF_VIEW_ANGLE); //in radians
+	final static private double TANGENT_OF_HALF_VIEW_ANGLE = Math.tan(VIEW_ANGLE / 2.0); 
 	
 	/**
 	 * Get this particle's offset in degrees from directly in front of the camera.
@@ -139,9 +136,9 @@ public class ParticleReport implements Comparable<ParticleReport>{
 		double halfImageWidth = imageSize.width / 2.0;
 		double distanceFromCenter = center_of_mass_x - halfImageWidth;
 		
-		double headingRadians = Math.atan(distanceFromCenter * TANGENT_OF_HALF_VIEW_ANGLE / halfImageWidth);
+		double heading = Math.atan(distanceFromCenter * TANGENT_OF_HALF_VIEW_ANGLE / halfImageWidth);
+		return heading;
 		
-		return RobotMath.rTD(headingRadians);
 	}
 	
 }
