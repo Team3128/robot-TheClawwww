@@ -4,6 +4,7 @@ import org.team3128.autonomous.programs.DriveIntoAutoZoneAuto;
 import org.team3128.autonomous.programs.DualFarCanGrabAuto;
 import org.team3128.autonomous.programs.FarCanGrabAuto;
 import org.team3128.autonomous.programs.TakeToteIntoZoneAuto;
+import org.team3128.common.NarwhalRobot;
 import org.team3128.common.autonomous.DoNothingAuto;
 import org.team3128.common.drive.TankDrive;
 import org.team3128.common.hardware.encoder.angular.AnalogPotentiometerEncoder;
@@ -15,8 +16,6 @@ import org.team3128.common.listener.ListenerManager;
 import org.team3128.common.listener.controllers.ControllerAttackJoy;
 import org.team3128.common.listener.controllers.ControllerExtreme3D;
 import org.team3128.common.listener.controltypes.Button;
-import org.team3128.common.multibot.MainClass;
-import org.team3128.common.multibot.RobotTemplate;
 import org.team3128.common.util.GenericSendableChooser;
 import org.team3128.common.util.Log;
 import org.team3128.common.util.units.Length;
@@ -33,7 +32,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author Jamie
  *
  */
-public class MainTheClawwww extends MainClass
+public class MainTheClawwww extends NarwhalRobot
 {
 	
 	/**
@@ -76,7 +75,8 @@ public class MainTheClawwww extends MainClass
 	
 	PWMLights lights;
 	
-	public MainTheClawwww()
+	@Override
+	protected void constructHardware()
 	{	
 		lmExtreme = new ListenerManager(new Joystick(0));
 		lmJoyLeft = new ListenerManager(new Joystick(2));
@@ -125,15 +125,17 @@ public class MainTheClawwww extends MainClass
 		
 		lights = new PWMLights(10, 11, 12);
 
-	}
-
-	protected void initializeRobot(RobotTemplate robotTemplate)
-	{	
-		robotTemplate.addListenerManager(lmExtreme);
-		robotTemplate.addListenerManager(lmJoyLeft);
-		robotTemplate.addListenerManager(lmJoyRight);
+		addListenerManager(lmExtreme);
+		addListenerManager(lmJoyLeft);
+		addListenerManager(lmJoyRight);
 		
         Log.info("MainTheClawwww", "\"The Clawwwwwww.....\"   Activated");
+	}
+
+	@Override
+	protected void setupListeners()
+	{	
+
         
         //Teleop Listeners
         //---------------------------------------------------------------------------------------
@@ -234,7 +236,8 @@ public class MainTheClawwww extends MainClass
 		
 	}
 
-	protected void initializeDisabled()
+	@Override
+	protected void disabledInit()
 	{
 		
 		armTurnMotor.resetSpeedControl();
@@ -249,7 +252,8 @@ public class MainTheClawwww extends MainClass
 		clawArm.resetTargets();
 	}
 
-	protected void initializeAuto()
+	@Override
+	protected void autonomousInit()
 	{
 		//lights.setColor(Color.new4Bit(0xa, 2, 2));
 		
@@ -258,7 +262,8 @@ public class MainTheClawwww extends MainClass
 		clawArm.resetTargets();
 	}
 	
-	protected void initializeTeleop()
+	@Override
+	protected void teleopInit()
 	{	
 		clawArm.resetTargets();
 
@@ -272,7 +277,7 @@ public class MainTheClawwww extends MainClass
 	}
 
 	@Override
-	protected void addAutoPrograms(GenericSendableChooser<CommandGroup> autoChooser)
+	protected void constructAutoPrograms(GenericSendableChooser<CommandGroup> autoChooser)
 	{
 		autoChooser.addDefault("Take Tote into Auto Zone", new TakeToteIntoZoneAuto(drive, frontHookMotor, lights));
 		autoChooser.addObject("Can Grab", new FarCanGrabAuto(drive, clawArm, frontHookMotor, false));
