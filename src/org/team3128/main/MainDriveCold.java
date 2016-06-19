@@ -67,7 +67,8 @@ public class MainDriveCold extends NarwhalRobot
 		rightMotors.addMotor(new Talon(3));
 		rightMotors.invert();
 	
-		drive = new TankDrive(leftMotors, rightMotors, leftDriveEncoder, rightDriveEncoder, 6 * Length.in * Math.PI, 1, 24.5 * Length.in);
+		//TODO: remeasure wheelbase and track
+		drive = new TankDrive(leftMotors, rightMotors, leftDriveEncoder, rightDriveEncoder, 6 * Length.in * Math.PI, 1, 20 * Length.in, 15 * Length.in);
 		
 
 				

@@ -64,7 +64,7 @@ public class MainCameraTest extends NarwhalRobot
 		rightMotors.addMotor(new Talon(4));
 		rightMotors.invert();
 	
-		drive = new TankDrive(leftMotors, rightMotors, leftDriveEncoder, rightDriveEncoder, 6 * Length.in * Math.PI, 1,  24.5 * Length.in);		
+		drive = new TankDrive(leftMotors, rightMotors, leftDriveEncoder, rightDriveEncoder, 6 * Length.in * Math.PI, 1,  20 * Length.in, 15 * Length.in);		
 		
 		camera = new AxisCamera("10.31.31.21");
 		visionProcessor = new RoboVision(camera, .5, true);
