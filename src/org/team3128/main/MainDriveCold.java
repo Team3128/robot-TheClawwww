@@ -8,7 +8,6 @@ import org.team3128.common.hardware.lights.PWMLights;
 import org.team3128.common.hardware.motor.MotorGroup;
 import org.team3128.common.listener.IListenerCallback;
 import org.team3128.common.listener.ListenerManager;
-import org.team3128.common.listener.controller.ControllerExtreme3D;
 import org.team3128.common.listener.controller.ControllerXbox;
 import org.team3128.common.multibot.MainClass;
 import org.team3128.common.multibot.RobotTemplate;
@@ -77,11 +76,10 @@ public class MainDriveCold extends MainClass
 		
 		updateDriveCOD = () ->
 		{
-			double joyX = listenerManagerExtreme.getRawAxis(ControllerExtreme3D.TWIST);
-			double joyY = listenerManagerExtreme.getRawAxis(ControllerExtreme3D.JOYY);
-			double throttle = -listenerManagerExtreme.getRawAxis(ControllerExtreme3D.THROTTLE);
+			double joyX = .7 * listenerManagerExtreme.getRawAxis(ControllerXbox.JOY2X);
+			double joyY = listenerManagerExtreme.getRawAxis(ControllerXbox.JOY1Y);
 			
-			drive.arcadeDrive(joyX, joyY, throttle, listenerManagerExtreme.getRawBool(ControllerExtreme3D.TRIGGERDOWN));
+			drive.arcadeDrive(joyX, joyY, 1, listenerManagerExtreme.getRawBool(ControllerXbox.RBDOWN));
 		};
 				
 		lights = new PWMLights(10, 11, 12);
@@ -125,8 +123,8 @@ public class MainDriveCold extends MainClass
 		// Drive code, on Logitech Extreme3D joystick
 		//-----------------------------------------------------------
 		listenerManagerExtreme.addListener(updateDriveCOD,
-				ControllerExtreme3D.TWIST, ControllerExtreme3D.JOYY, ControllerExtreme3D.THROTTLE,
-				ControllerExtreme3D.TRIGGERDOWN, ControllerExtreme3D.TRIGGERUP);
+				ControllerXbox.JOY2X, ControllerXbox.JOY1Y,
+				ControllerXbox.RBDOWN, ControllerXbox.RBDOWN);
 		
 		listenerManagerExtreme.addListener(ControllerXbox.STARTDOWN, () ->
 		{
