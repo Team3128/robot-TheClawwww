@@ -1,5 +1,6 @@
 package org.team3128.main;
 
+import org.team3128.autonomous.programs.TestGyroTurnAuto;
 import org.team3128.common.NarwhalRobot;
 import org.team3128.common.drive.TankDrive;
 import org.team3128.common.hardware.encoder.velocity.QuadratureEncoderLink;
@@ -9,12 +10,15 @@ import org.team3128.common.hardware.lights.PWMLights;
 import org.team3128.common.hardware.motor.MotorGroup;
 import org.team3128.common.listener.ListenerManager;
 import org.team3128.common.listener.controllers.ControllerXbox;
+import org.team3128.common.util.GenericSendableChooser;
 import org.team3128.common.util.Log;
 import org.team3128.common.util.units.Length;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -37,15 +41,18 @@ public class MainDriveCold extends NarwhalRobot
 	
 	public TankDrive drive;
 	
-	int cameraHandle;
 	PWMLights lights;
 	
 	LightsSequence lightShowSequence;
-
+	
+	AnalogGyro gyro;
+	
 	@Override
 	protected void updateDashboard()
 	{
 		SmartDashboard.putNumber("Total Current: ", powerDistPanel.getTotalCurrent());
+		
+		SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
 	}
 
 	@Override
@@ -68,11 +75,15 @@ public class MainDriveCold extends NarwhalRobot
 		rightMotors.invert();
 	
 		//TODO: remeasure wheelbase and track
-		drive = new TankDrive(leftMotors, rightMotors, leftDriveEncoder, rightDriveEncoder, 6 * Length.in * Math.PI, 1, 20 * Length.in, 15 * Length.in);
+		drive = new TankDrive(leftMotors, rightMotors, leftDriveEncoder, rightDriveEncoder,
+				5.75 * Length.in * Math.PI, 1, 27 * Length.in, 15.125 * Length.in);
 		
 
 				
 		lights = new PWMLights(10, 11, 12);
+		
+		gyro = new AnalogGyro(0);
+		gyro.setSensitivity(-0.007); //invert gyro
 		
 		lightShowSequence = new LightsSequence();
 
@@ -109,6 +120,8 @@ public class MainDriveCold extends NarwhalRobot
 		// Drive code, on Logitech Extreme3D joystick
 		//-----------------------------------------------------------
 		lmXbox.nameControl(ControllerXbox.START, "ClearStickyFaults");
+		lmXbox.nameControl(ControllerXbox.BACK, "ResetGyro");
+
 		lmXbox.nameControl(ControllerXbox.RB, "DriveDoubleSpeed");
 		
 		lmXbox.nameControl(ControllerXbox.JOY2X, "DriveTurn");
@@ -117,6 +130,11 @@ public class MainDriveCold extends NarwhalRobot
 		lmXbox.addButtonDownListener("ClearStickyFaults", () ->
 		{
 			powerDistPanel.clearStickyFaults();
+		});
+		
+		lmXbox.addButtonDownListener("ResetGyro", () ->
+		{
+			gyro.reset();
 		});
 		
 		
@@ -139,4 +157,10 @@ public class MainDriveCold extends NarwhalRobot
 	{
 		
 	}
+	
+	@Override
+    protected void constructAutoPrograms(GenericSendableChooser<CommandGroup> programChooser) 
+    {
+    	programChooser.addDefault("Test Gyro Turn", new TestGyroTurnAuto(drive, gyro));
+    }
 }
