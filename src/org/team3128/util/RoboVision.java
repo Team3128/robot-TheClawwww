@@ -141,7 +141,7 @@ public class RoboVision
                     double rectangularityDifference = Math.abs(report.rectangularity - rectangularity);
                     
                     //we want particles with a close aspect ratio and rectangularity to what we want, as well as a large area
-                    report.setScore(aspectRatioScore * RobotMath.clampDouble(RECTANGULARITY_MATCH_LIMIT - rectangularityDifference, 0, RECTANGULARITY_MATCH_LIMIT) * report.area);
+                    report.setScore(aspectRatioScore * RobotMath.clamp(RECTANGULARITY_MATCH_LIMIT - rectangularityDifference, 0, RECTANGULARITY_MATCH_LIMIT) * report.area);
                     
                     NIVision.Rect rect = new NIVision.Rect(report.boundingRectTop, report.boundingRectLeft, report.boundingRectHeight, report.boundingRectWidth);
                     
