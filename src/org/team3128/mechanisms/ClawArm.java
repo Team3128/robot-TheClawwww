@@ -1,6 +1,6 @@
 package org.team3128.mechanisms;
 
-import org.team3128.common.hardware.encoder.angular.IAngularEncoder;
+import org.team3128.common.hardware.encoder.distance.IDistanceEncoder;
 import org.team3128.common.hardware.motor.MotorGroup;
 import org.team3128.common.hardware.motor.limiter.AngleLimiter;
 import org.team3128.common.hardware.motor.limiter.SwitchLimiter;
@@ -30,9 +30,9 @@ public class ClawArm
 	
 	AngleLimiter armJointEndstopTarget;
 	
-	public IAngularEncoder _armRotateEncoder;
+	public IDistanceEncoder _armRotateEncoder;
 	
-	public IAngularEncoder _armJointEncoder;
+	public IDistanceEncoder _armJointEncoder;
 	
 	public DigitalInput clawMinLimitSwitch;
 	public DigitalInput clawMaxLimitSwitch;
@@ -81,7 +81,7 @@ public class ClawArm
 	 * @param armJoint
 	 * @param clawGrab
 	 */
-	public ClawArm(MotorGroup armRotate, MotorGroup armJoint, MotorGroup clawGrab, IAngularEncoder armEncoder, IAngularEncoder jointEncoder, PowerDistributionPanel panel)
+	public ClawArm(MotorGroup armRotate, MotorGroup armJoint, MotorGroup clawGrab, IDistanceEncoder armEncoder, IDistanceEncoder jointEncoder, PowerDistributionPanel panel)
 	{
 		_armRotate = armRotate;
 		_armJoint = armJoint;

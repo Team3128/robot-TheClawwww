@@ -7,9 +7,9 @@ import org.team3128.autonomous.programs.TakeToteIntoZoneAuto;
 import org.team3128.common.NarwhalRobot;
 import org.team3128.common.autonomous.DoNothingAuto;
 import org.team3128.common.drive.TankDrive;
-import org.team3128.common.hardware.encoder.angular.AnalogPotentiometerEncoder;
-import org.team3128.common.hardware.encoder.angular.IAngularEncoder;
-import org.team3128.common.hardware.encoder.velocity.QuadratureEncoderLink;
+import org.team3128.common.hardware.encoder.both.QuadratureEncoder;
+import org.team3128.common.hardware.encoder.distance.AnalogPotentiometerEncoder;
+import org.team3128.common.hardware.encoder.distance.IDistanceEncoder;
 import org.team3128.common.hardware.lights.PWMLights;
 import org.team3128.common.hardware.motor.MotorGroup;
 import org.team3128.common.listener.ListenerManager;
@@ -48,8 +48,8 @@ public class MainTheClawwww extends NarwhalRobot
 	
 	public MotorGroup leftMotors;
 	public MotorGroup rightMotors;
-	public QuadratureEncoderLink leftDriveEncoder;
-	public QuadratureEncoderLink rightDriveEncoder;
+	public QuadratureEncoder leftDriveEncoder;
+	public QuadratureEncoder rightDriveEncoder;
 	
 	public MotorGroup armTurnMotor;
 	
@@ -59,7 +59,7 @@ public class MainTheClawwww extends NarwhalRobot
 	
 	public MotorGroup clawGrabMotor;
 
-	public IAngularEncoder armRotateEncoder;
+	public IDistanceEncoder armRotateEncoder;
 	
 	public AnalogPotentiometerEncoder armJointEncoder;
 	
@@ -83,8 +83,8 @@ public class MainTheClawwww extends NarwhalRobot
 		lmJoyRight = new ListenerManager(new Joystick(1));		
 		powerDistPanel = new PowerDistributionPanel();
 		
-		leftDriveEncoder = new QuadratureEncoderLink(0,	1, 128, false);
-		rightDriveEncoder = new QuadratureEncoderLink(3, 4, 128, true);
+		leftDriveEncoder = new QuadratureEncoder(0,	1, 128, false);
+		rightDriveEncoder = new QuadratureEncoder(3, 4, 128, true);
 		
 		leftMotors = new MotorGroup(/*new PIDSpeedTarget(0, leftDriveEncoder, new VelocityPID(.1, 0, 0))*/);
 		leftMotors.addMotor(new Talon(1));

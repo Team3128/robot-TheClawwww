@@ -3,7 +3,7 @@ package org.team3128.main;
 import org.team3128.autonomous.programs.TestGyroTurnAuto;
 import org.team3128.common.NarwhalRobot;
 import org.team3128.common.drive.TankDrive;
-import org.team3128.common.hardware.encoder.velocity.QuadratureEncoderLink;
+import org.team3128.common.hardware.encoder.both.QuadratureEncoder;
 import org.team3128.common.hardware.lights.LightsColor;
 import org.team3128.common.hardware.lights.LightsSequence;
 import org.team3128.common.hardware.lights.PWMLights;
@@ -35,8 +35,8 @@ public class MainDriveCold extends NarwhalRobot
 	
 	public MotorGroup leftMotors;
 	public MotorGroup rightMotors;
-	public QuadratureEncoderLink leftDriveEncoder;
-	public QuadratureEncoderLink rightDriveEncoder;
+	public QuadratureEncoder leftDriveEncoder;
+	public QuadratureEncoder rightDriveEncoder;
 	public PowerDistributionPanel powerDistPanel;
 	
 	public TankDrive drive;
@@ -61,8 +61,8 @@ public class MainDriveCold extends NarwhalRobot
 		lmXbox = new ListenerManager(new Joystick(0));
 		powerDistPanel = new PowerDistributionPanel();
 		
-		leftDriveEncoder = new QuadratureEncoderLink(0,	1, 128, false);
-		rightDriveEncoder = new QuadratureEncoderLink(3, 4, 128, true);
+		leftDriveEncoder = new QuadratureEncoder(0,	1, 128, false);
+		rightDriveEncoder = new QuadratureEncoder(3, 4, 128, true);
 		
 		leftMotors = new MotorGroup();
 		leftMotors.addMotor(new Talon(0));

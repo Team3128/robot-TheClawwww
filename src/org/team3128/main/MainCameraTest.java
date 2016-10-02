@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import org.team3128.autonomous.commands.CmdVisionGoTowardsCan;
 import org.team3128.common.NarwhalRobot;
 import org.team3128.common.drive.TankDrive;
-import org.team3128.common.hardware.encoder.velocity.QuadratureEncoderLink;
+import org.team3128.common.hardware.encoder.both.QuadratureEncoder;
 import org.team3128.common.hardware.lights.PWMLights;
 import org.team3128.common.hardware.motor.MotorGroup;
 import org.team3128.common.listener.ListenerManager;
@@ -32,8 +32,8 @@ public class MainCameraTest extends NarwhalRobot
 	
 	public MotorGroup leftMotors;
 	public MotorGroup rightMotors;
-	public QuadratureEncoderLink leftDriveEncoder;
-	public QuadratureEncoderLink rightDriveEncoder;
+	public QuadratureEncoder leftDriveEncoder;
+	public QuadratureEncoder rightDriveEncoder;
 	public PowerDistributionPanel powerDistPanel;
 	
 	public TankDrive drive;
@@ -51,8 +51,8 @@ public class MainCameraTest extends NarwhalRobot
 		
 		powerDistPanel = new PowerDistributionPanel();
 		
-		leftDriveEncoder = new QuadratureEncoderLink(0,	1, 128, false);
-		rightDriveEncoder = new QuadratureEncoderLink(3, 4, 128, true);
+		leftDriveEncoder = new QuadratureEncoder(0,	1, 128, false);
+		rightDriveEncoder = new QuadratureEncoder(3, 4, 128, true);
 		
 		leftMotors = new MotorGroup();
 		leftMotors.addMotor(new Talon(1));
